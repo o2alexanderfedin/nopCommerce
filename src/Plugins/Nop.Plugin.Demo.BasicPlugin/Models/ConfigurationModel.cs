@@ -5,16 +5,19 @@ namespace Nop.Plugin.Demo.BasicPlugin.Models
 {
     public record ConfigurationModel : BaseNopModel
     {
+        public int ActiveStoreScopeConfiguration { get; set; }
+
         [NopResourceDisplayName("Plugins.Demo.BasicPlugin.DefaultSearchRadius")]
-        public int DefaultSearchRadius { get; set; }
+        public double DefaultSearchRadius { get; set; }
 
-        [NopResourceDisplayName("Plugins.Demo.BasicPlugin.MaxSearchRadius")]
-        public int MaxSearchRadius { get; set; }
+        [NopResourceDisplayName("Plugins.Demo.BasicPlugin.GeocodingApiKey")]
+        public string GeocodingApiKey { get; set; }
 
-        [NopResourceDisplayName("Plugins.Demo.BasicPlugin.EnableCaching")]
-        public bool EnableCaching { get; set; }
+        [NopResourceDisplayName("Plugins.Demo.BasicPlugin.GeocodeAddressCacheDuration")]
+        public int GeocodeAddressCacheDuration { get; set; }
 
-        [NopResourceDisplayName("Plugins.Demo.BasicPlugin.CacheDurationMinutes")]
-        public int CacheDurationMinutes { get; set; }
+        public bool DefaultSearchRadius_OverrideForStore { get; set; }
+        public bool GeocodingApiKey_OverrideForStore { get; set; }
+        public bool GeocodeAddressCacheDuration_OverrideForStore { get; set; }
     }
 }

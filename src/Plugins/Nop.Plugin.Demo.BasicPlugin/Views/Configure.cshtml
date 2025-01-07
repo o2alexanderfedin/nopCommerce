@@ -9,53 +9,75 @@
     <div class="cards-group">
         <div class="card card-default">
             <div class="card-body">
+                @if (Model.ActiveStoreScopeConfiguration > 0)
+                {
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="DefaultSearchRadius_OverrideForStore" asp-input="DefaultSearchRadius" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-label asp-for="DefaultSearchRadius" />
+                            <nop-editor asp-for="DefaultSearchRadius" />
+                            <span asp-validation-for="DefaultSearchRadius"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="GeocodingApiKey_OverrideForStore" asp-input="GeocodingApiKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-label asp-for="GeocodingApiKey" />
+                            <nop-editor asp-for="GeocodingApiKey" />
+                            <span asp-validation-for="GeocodingApiKey"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="GeocodeAddressCacheDuration_OverrideForStore" asp-input="GeocodeAddressCacheDuration" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-label asp-for="GeocodeAddressCacheDuration" />
+                            <nop-editor asp-for="GeocodeAddressCacheDuration" />
+                            <span asp-validation-for="GeocodeAddressCacheDuration"></span>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="DefaultSearchRadius" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="DefaultSearchRadius" />
+                            <span asp-validation-for="DefaultSearchRadius"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="GeocodingApiKey" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="GeocodingApiKey" />
+                            <span asp-validation-for="GeocodingApiKey"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="GeocodeAddressCacheDuration" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="GeocodeAddressCacheDuration" />
+                            <span asp-validation-for="GeocodeAddressCacheDuration"></span>
+                        </div>
+                    </div>
+                }
                 <div class="form-group row">
-                    <div class="col-md-3">
-                        <nop-label asp-for="DefaultSearchRadius" />
-                    </div>
-                    <div class="col-md-9">
-                        <nop-editor asp-for="DefaultSearchRadius" />
-                        <span asp-validation-for="DefaultSearchRadius"></span>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-md-3">
-                        <nop-label asp-for="MaxSearchRadius" />
-                    </div>
-                    <div class="col-md-9">
-                        <nop-editor asp-for="MaxSearchRadius" />
-                        <span asp-validation-for="MaxSearchRadius"></span>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-md-3">
-                        <nop-label asp-for="EnableCaching" />
-                    </div>
-                    <div class="col-md-9">
-                        <nop-editor asp-for="EnableCaching" />
-                        <span asp-validation-for="EnableCaching"></span>
-                    </div>
-                </div>
-                <div class="form-group row" id="cacheDurationGroup">
-                    <div class="col-md-3">
-                        <nop-label asp-for="CacheDurationMinutes" />
-                    </div>
-                    <div class="col-md-9">
-                        <nop-editor asp-for="CacheDurationMinutes" />
-                        <span asp-validation-for="CacheDurationMinutes"></span>
+                    <div class="col-md-9 offset-md-3">
+                        <button type="submit" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </form>
-
-<script>
-    $(document).ready(function() {
-        $("#@Html.IdFor(model => model.EnableCaching)").click(function() {
-            $("#cacheDurationGroup").toggle($(this).is(":checked"));
-        });
-
-        $("#cacheDurationGroup").toggle($("#@Html.IdFor(model => model.EnableCaching)").is(":checked"));
-    });
-</script>
