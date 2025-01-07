@@ -1,0 +1,11 @@
+{
+  "Group": "Demo",
+  "FriendlyName": "Basic Demo Plugin",
+  "SystemName": "Demo.BasicPlugin",
+  "Version": "1.0",
+  "SupportedVersions": ["4.60"],
+  "Author": "o2alexanderfedin",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Demo.BasicPlugin.dll",
+  "Description": "This is a demo plugin showcasing basic nopCommerce plugin development"
+}
