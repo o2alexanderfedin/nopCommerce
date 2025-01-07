@@ -3,13 +3,13 @@ using Nop.Core;
 
 namespace Nop.Plugin.Demo.BasicPlugin.Data
 {
+    using H3IndexFactory = H3Index;
+    
     /// <summary>
     /// Represents a vendor's geographic location
     /// </summary>
     public class VendorLocation : BaseEntity
     {
-        private static readonly H3Index _h3Index = new();
-
         /// <summary>
         /// Gets or sets the vendor identifier
         /// </summary>
@@ -50,7 +50,7 @@ namespace Nop.Plugin.Demo.BasicPlugin.Data
             {
                 Latitude = value.Latitude;
                 Longitude = value.Longitude;
-                H3Index = _h3Index.GetIndex(value);
+                H3Index = H3IndexFactory.FromCoordinate(value).Value;
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using Nop.Core;
+using Nop.Core;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Vendors;
 
 namespace Nop.Services.Vendors;
@@ -125,4 +126,14 @@ public partial interface IVendorService
     /// <param name="vendorNote">Vendor note</param>
     /// <returns>Formatted text</returns>
     string FormatVendorNoteText(VendorNote vendorNote);
+
+    /// <summary>
+    /// Gets a vendor's address
+    /// </summary>
+    /// <param name="vendor">Vendor</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the vendor's address
+    /// </returns>
+    Task<Address> GetVendorAddressAsync(Vendor vendor);
 }
