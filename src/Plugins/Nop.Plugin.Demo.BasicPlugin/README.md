@@ -1,175 +1,156 @@
-# Nop.Plugin.Demo.BasicPlugin - Geo-Location Vendor Matching
+# nopCommerce Demo Basic Plugin
 
-A demo plugin for nopCommerce that adds geo-location based vendor matching capabilities.
+A geolocation-based vendor discovery solution for nopCommerce that enhances the marketplace experience by connecting customers with nearby vendors.
 
-## Features
+## Core Features
 
-### Core Features
-- Distance-based vendor search
-- Location-aware product listings
-- Vendor radius filtering
-- Geographic search optimization
+### Vendor Location Management
+- Automatically geocodes vendor addresses into precise coordinates (latitude/longitude)
+- Stores vendor locations using H3 spatial indexing for efficient geographic queries
+- Maintains location data freshness through automatic updates when vendor addresses change
 
-### Technical Components
+### Proximity-Based Vendor Search
+- Allows customers to find vendors within a specified radius
+- Supports configurable search radius (default and maximum)
+- Returns vendors sorted by distance from a given location
+- Optimizes search performance using H3 spatial indexing
 
-#### 1. Data Layer
-- **GeoCoordinate**: Value object for latitude/longitude
-- **VendorLocation**: Entity extending vendor with geo data
-- **LocationIndex**: Spatial index for efficient geo-queries
-- **SearchParameters**: Value object for search criteria
+### Multi-Store Support
+- Configurable per store in multi-store setups
+- Store-specific settings for:
+  - Default search radius
+  - Geocoding API keys
+  - Cache duration for geocoded addresses
 
-#### 2. Services
-- **IGeocodingService**
-  - Convert addresses to coordinates
-  - Caching of geocoded locations
-  - Batch geocoding capabilities
+## Business Benefits
 
-- **IDistanceCalculationService**
-  - Calculate distances between points
-  - Support multiple distance metrics
-  - Optimize for bulk calculations
+### For Customers
+- Find local vendors quickly
+- See vendor distances on product pages
+- Make informed purchasing decisions based on vendor proximity
+- Reduce shipping costs by choosing nearby vendors
 
-- **IVendorLocationService**
-  - Manage vendor location data
-  - Handle location updates
-  - Maintain spatial indices
+### For Vendors
+- Increased visibility to local customers
+- Automatic location management (no manual coordinate entry needed)
+- Competitive advantage in local markets
+- Potential for reduced shipping costs
 
-- **IGeoSearchService**
-  - Execute geo-spatial queries
-  - Apply search filters
-  - Sort by distance
+### For Store Owners
+- Enhanced marketplace functionality
+- Improved customer experience
+- Efficient vendor discovery
+- Reduced support overhead through automated location management
+- Cache optimization for better performance
 
-#### 3. Models
-- **VendorLocationModel**: DTO for vendor location data
-- **GeoSearchModel**: Search parameters and filters
-- **LocationViewModel**: View-specific location data
-- **SearchResultModel**: Geo-enriched search results
+## Technical Features
 
-#### 4. Controllers
-- **VendorLocationController**
-  - Manage vendor locations
-  - Handle location updates
-  - Process search requests
+### Geocoding Service
+- Converts physical addresses to coordinates
+- Caches results to reduce API calls
+- Configurable cache duration
+- API key management for geocoding services
 
-#### 5. Components
-- **VendorLocationWidget**
-  - Display vendor locations
-  - Show distance information
-  - Render location filters
+### Location Services
+- High-performance spatial queries using H3 indexing
+- Accurate distance calculations
+- Support for large vendor databases
+- Efficient nearby vendor discovery
 
-#### 6. Infrastructure
-- **GeoSearchConfiguration**
-  - Search radius limits
-  - Distance calculation settings
-  - Caching parameters
-
-- **LocationDataBuilder**
-  - Initialize location data
-  - Build spatial indices
-  - Handle data migrations
-
-#### 7. Integration Points
-- **Vendor Entity Extension**
-  - Add location coordinates
-  - Cache geocoding results
-  - Track location updates
-
-- **Product Search Integration**
-  - Inject distance filters
-  - Add location-based sorting
-  - Enhance search results
-
-- **Admin Panel Integration**
-  - Location management UI
-  - Geocoding controls
-  - Search configuration
-
-## Technical Design
-
-### Data Flow
-1. Address → Geocoding Service → Coordinates
-2. Coordinates → Spatial Index → Quick Lookup
-3. Search Query → Geo Filter → Sorted Results
-
-### Performance Optimizations
-- Spatial indexing for fast queries
-- Coordinate caching
-- Batch geocoding
-- Result pagination
-- Distance approximation
-
-### Scalability Considerations
-- Distributed spatial indices
-- Caching strategies
-- Batch processing
-- Query optimization
-
-## Project Structure
-
-```
-Nop.Plugin.Demo.BasicPlugin/
-├── Components/
-│   ├── VendorLocationWidget.cs
-│   └── LocationFilterComponent.cs
-├── Controllers/
-│   └── VendorLocationController.cs
-├── Data/
-│   ├── GeoCoordinate.cs
-│   ├── VendorLocation.cs
-│   └── LocationIndex.cs
-├── Infrastructure/
-│   ├── GeoSearchConfiguration.cs
-│   └── LocationDataBuilder.cs
-├── Models/
-│   ├── VendorLocationModel.cs
-│   ├── GeoSearchModel.cs
-│   └── SearchResultModel.cs
-├── Services/
-│   ├── GeocodingService.cs
-│   ├── DistanceCalculationService.cs
-│   ├── VendorLocationService.cs
-│   └── GeoSearchService.cs
-├── Views/
-│   ├── VendorLocation/
-│   │   ├── Configure.cshtml
-│   │   └── Search.cshtml
-│   └── Components/
-│       └── VendorLocationWidget/
-│           └── Default.cshtml
-├── plugin.json
-└── DemoPlugin.cs
-```
-
-## Implementation Strategy
-
-### Phase 1: Core Infrastructure
-- Basic geocoding service
-- Vendor location storage
-- Simple distance calculations
-
-### Phase 2: Search Features
-- Location-based filtering
-- Distance sorting
-- Basic UI components
-
-### Phase 3: Optimization
-- Spatial indexing
-- Caching implementation
-- Performance tuning
-
-### Phase 4: Advanced Features
-- Radius search
-- Location clustering
-- Advanced filtering
+### UI Integration
+- Vendor location widget on product pages
+- Vendor search interface
+- Distance display in search results
+- Mobile-friendly design
 
 ## Configuration
 
-Configure through:
-`Admin → Configuration → Local Plugins → Demo Basic Plugin → Configure`
-
-Settings include:
+### Search Settings
 - Default search radius
-- Distance units
-- Geocoding service settings
+- Maximum search radius
+- Results limit
+
+### Geocoding Settings
+- API key configuration
 - Cache duration
-- Index update frequency
+- Address validation options
+
+### Display Settings
+- Distance unit preference (km/miles)
+- Location display format
+- Widget placement options
+
+## Installation
+
+1. Download the plugin from the nopCommerce marketplace
+2. Upload and install the plugin through your nopCommerce admin panel
+3. Configure the plugin settings:
+   - Enter your geocoding API key
+   - Set default search radius
+   - Configure cache duration
+4. The plugin will automatically start geocoding vendor addresses
+
+## Usage
+
+### For Store Owners
+1. Go to Configuration → Local Plugins
+2. Find "Demo Basic Plugin" and click Configure
+3. Set up your preferred configuration options
+4. The plugin will automatically process vendor addresses
+
+### For Customers
+1. Browse products as usual
+2. View vendor locations and distances on product pages
+3. Use the vendor search to find nearby vendors
+4. Filter search results by distance
+
+## Technical Requirements
+
+- nopCommerce 4.60 or later
+- .NET 9.0
+- Access to a geocoding service (API key required)
+- Sufficient storage for location caching
+
+## Integration Points
+
+### nopCommerce Core
+- Vendor management system
+- Product catalog
+- Multi-store functionality
+- Address management
+
+### External Services
+- Geocoding APIs
+- Mapping services (optional)
+- Location validation services
+
+### User Interface
+- Product pages
+- Vendor listings
+- Search results
+- Admin configuration panels
+
+## Performance Considerations
+
+- Uses H3 spatial indexing for efficient location queries
+- Implements smart caching to reduce API calls
+- Optimizes database queries for large vendor sets
+- Supports high-traffic marketplace scenarios
+
+## Support
+
+For support, please:
+1. Check the [documentation](https://docs.nopcommerce.com/en/plugins/demo-basic-plugin.html)
+2. Visit our [community forums](https://www.nopcommerce.com/boards/)
+3. Contact our [support team](https://www.nopcommerce.com/contact-us)
+
+## Contributing
+
+We welcome contributions! Please:
+1. Fork the repository
+2. Create a feature branch
+3. Submit a pull request
+
+## License
+
+This plugin is released under the nopCommerce license. See the LICENSE file for details.
