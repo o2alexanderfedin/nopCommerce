@@ -1,6 +1,21 @@
 @model VendorLocationModel
 @{
     Layout = "";
+    
+    if (!Html.HasScriptParts(ResourceLocation.Footer, "~/Plugins/Demo.BasicPlugin/js/vendor-location.js", excludeFromBundle: false))
+    {
+        Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/Demo.BasicPlugin/js/vendor-location.js", excludeFromBundle: false);
+    }
+    
+    var googleMapsApiKey = await EngineContext.Current.Resolve<ISettingService>()
+        .GetSettingByKeyAsync<string>("DemoBasicPlugin.GoogleMapsApiKey");
+}
+
+@if (!string.IsNullOrEmpty(googleMapsApiKey))
+{
+    <script>
+        window.googleMapsApiKey = '@Html.Raw(googleMapsApiKey)';
+    </script>
 }
 
 @if (Model != null)
@@ -28,10 +43,12 @@
             var vendor = {
                 lat: parseFloat(mapElement.data('lat')),
                 lng: parseFloat(mapElement.data('lng')),
-                name: mapElement.data('name')
+                name: mapElement.data('name'),
+                distance: '@Model.Distance km away',
+                address: '@Model.Address'
             };
 
-            initVendorMap('vendorMap', [vendor]);
+            VendorLocation.initVendorMap('vendorMap', [vendor]);
         });
     </script>
 
@@ -73,6 +90,21 @@
             border-radius: 4px;
             margin-top: 10px;
             border: 1px solid #eee;
+        }
+
+        .vendor-info-window {
+            padding: 5px;
+            max-width: 200px;
+        }
+
+        .vendor-info-window h5 {
+            margin: 0 0 5px;
+            color: #333;
+        }
+
+        .vendor-info-window p {
+            margin: 3px 0;
+            font-size: 0.9em;
         }
     </style>
 }

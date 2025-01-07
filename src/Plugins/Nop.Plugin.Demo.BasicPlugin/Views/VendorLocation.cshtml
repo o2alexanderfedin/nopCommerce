@@ -1,30 +1,46 @@
 @model IList<VendorLocationModel>
 @{
-    Layout = "";
+    Layout = "_ColumnsTwo";
+    
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/Demo.BasicPlugin/js/vendor-location.js", excludeFromBundle: false);
+    
+    var googleMapsApiKey = await EngineContext.Current.Resolve<ISettingService>()
+        .GetSettingByKeyAsync<string>("DemoBasicPlugin.GoogleMapsApiKey");
 }
 
-<div class="vendor-location-container">
-    <div class="vendor-list">
-        @if (Model.Any())
-        {
-            foreach (var vendor in Model)
-            {
-                <div class="vendor-item" data-lat="@vendor.Latitude" data-lng="@vendor.Longitude">
-                    <h4>@vendor.Name</h4>
-                    <p class="distance">@vendor.Distance km away</p>
-                    <p class="address">@vendor.Address</p>
-                    <a href="@Url.RouteUrl("Vendor", new { SeName = vendor.SeName })" class="btn btn-primary">View Vendor</a>
-                </div>
-            }
-        }
-        else
-        {
-            <div class="no-data">
-                No vendors found in your area.
-            </div>
-        }
+<script>
+    window.googleMapsApiKey = '@Html.Raw(googleMapsApiKey)';
+</script>
+
+<div class="page vendor-location-page">
+    <div class="page-title">
+        <h1>@T("Plugins.Demo.BasicPlugin.VendorLocation")</h1>
     </div>
-    <div id="vendor-map"></div>
+    <div class="page-body">
+        <div class="vendor-location-container">
+            <div class="vendor-list">
+                @if (Model.Any())
+                {
+                    foreach (var vendor in Model)
+                    {
+                        <div class="vendor-item" data-lat="@vendor.Latitude" data-lng="@vendor.Longitude">
+                            <h4>@vendor.Name</h4>
+                            <p class="distance">@vendor.Distance km away</p>
+                            <p class="address">@vendor.Address</p>
+                            <a href="@Url.RouteUrl("Vendor", new { SeName = vendor.SeName })" class="btn btn-primary">View Vendor</a>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="no-data">
+                        @T("Plugins.Demo.BasicPlugin.NoVendorsNearby")
+                    </div>
+                }
+            </div>
+            <div id="vendor-map"></div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -41,7 +57,7 @@
             });
         });
 
-        initVendorMap('vendor-map', vendors);
+        VendorLocation.initVendorMap('vendor-map', vendors);
     });
 </script>
 
@@ -66,6 +82,7 @@
         margin-bottom: 10px;
         background: #fff;
         transition: all 0.3s ease;
+        cursor: pointer;
     }
 
     .vendor-item:hover {
@@ -100,5 +117,35 @@
         text-align: center;
         padding: 20px;
         color: #666;
+    }
+
+    .vendor-info-window {
+        padding: 5px;
+        max-width: 200px;
+    }
+
+    .vendor-info-window h5 {
+        margin: 0 0 5px;
+        color: #333;
+    }
+
+    .vendor-info-window p {
+        margin: 3px 0;
+        font-size: 0.9em;
+    }
+
+    @media (max-width: 768px) {
+        .vendor-location-container {
+            flex-direction: column;
+        }
+
+        .vendor-list {
+            max-width: 100%;
+            max-height: 300px;
+        }
+
+        #vendor-map {
+            height: 400px;
+        }
     }
 </style>
