@@ -1,11 +1,11 @@
 {
-  "Group": "Demo",
-  "FriendlyName": "Basic Demo Plugin",
+  "Group": "Misc",
+  "FriendlyName": "Demo Basic Plugin",
   "SystemName": "Demo.BasicPlugin",
   "Version": "1.0",
-  "SupportedVersions": ["4.60"],
-  "Author": "o2alexanderfedin",
+  "SupportedVersions": [ "4.60" ],
+  "Author": "nopCommerce team",
   "DisplayOrder": 1,
   "FileName": "Nop.Plugin.Demo.BasicPlugin.dll",
-  "Description": "This is a demo plugin showcasing basic nopCommerce plugin development"
+  "Description": "This plugin demonstrates geo-location vendor matching capabilities"
 }
