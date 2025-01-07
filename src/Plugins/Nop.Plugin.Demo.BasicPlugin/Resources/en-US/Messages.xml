@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="English" IsDefault="true" IsRightToLeft="false">
+  <LocaleResource Name="Plugins.Demo.BasicPlugin">
+    <Value>Demo Basic Plugin</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Demo.BasicPlugin.VendorLocation">
+    <Value>Vendor Location</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Demo.BasicPlugin.DefaultSearchRadius">
+    <Value>Default Search Radius (km)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Demo.BasicPlugin.DefaultSearchRadius.Hint">
+    <Value>Enter the default radius (in kilometers) for searching nearby vendors.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Demo.BasicPlugin.GeocodingApiKey">
+    <Value>Geocoding API Key</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Demo.BasicPlugin.GeocodingApiKey.Hint">
+    <Value>Enter your geocoding service API key.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Demo.BasicPlugin.GeocodeAddressCacheDuration">
+    <Value>Address Cache Duration (hours)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Demo.BasicPlugin.GeocodeAddressCacheDuration.Hint">
+    <Value>Enter the duration (in hours) to cache geocoded addresses.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Demo.BasicPlugin.NoVendorsNearby">
+    <Value>No vendors found in your area.</Value>
+  </LocaleResource>
+</Language>

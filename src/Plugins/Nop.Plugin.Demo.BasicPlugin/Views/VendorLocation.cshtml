@@ -1,8 +1,104 @@
+@model IList<VendorLocationModel>
 @{
     Layout = "";
 }
 
-<div class="vendor-location-widget">
-    <h3>Vendor Location</h3>
+<div class="vendor-location-container">
+    <div class="vendor-list">
+        @if (Model.Any())
+        {
+            foreach (var vendor in Model)
+            {
+                <div class="vendor-item" data-lat="@vendor.Latitude" data-lng="@vendor.Longitude">
+                    <h4>@vendor.Name</h4>
+                    <p class="distance">@vendor.Distance km away</p>
+                    <p class="address">@vendor.Address</p>
+                    <a href="@Url.RouteUrl("Vendor", new { SeName = vendor.SeName })" class="btn btn-primary">View Vendor</a>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="no-data">
+                No vendors found in your area.
+            </div>
+        }
+    </div>
     <div id="vendor-map"></div>
 </div>
+
+<script>
+    $(document).ready(function() {
+        var vendors = [];
+        $('.vendor-item').each(function() {
+            var $item = $(this);
+            vendors.push({
+                lat: parseFloat($item.data('lat')),
+                lng: parseFloat($item.data('lng')),
+                name: $item.find('h4').text(),
+                distance: $item.find('.distance').text(),
+                address: $item.find('.address').text()
+            });
+        });
+
+        initVendorMap('vendor-map', vendors);
+    });
+</script>
+
+<style>
+    .vendor-location-container {
+        display: flex;
+        gap: 20px;
+        margin: 20px 0;
+    }
+
+    .vendor-list {
+        flex: 1;
+        max-width: 400px;
+        overflow-y: auto;
+        max-height: 600px;
+    }
+
+    .vendor-item {
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin-bottom: 10px;
+        background: #fff;
+        transition: all 0.3s ease;
+    }
+
+    .vendor-item:hover {
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .vendor-item h4 {
+        margin: 0 0 10px;
+        color: #333;
+    }
+
+    .vendor-item .distance {
+        color: #666;
+        font-size: 0.9em;
+        margin: 5px 0;
+    }
+
+    .vendor-item .address {
+        color: #888;
+        font-size: 0.9em;
+        margin: 5px 0 10px;
+    }
+
+    #vendor-map {
+        flex: 2;
+        height: 600px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+    }
+
+    .no-data {
+        text-align: center;
+        padding: 20px;
+        color: #666;
+    }
+</style>

@@ -1,28 +1,78 @@
+@model VendorLocationModel
 @{
     Layout = "";
 }
 
-<div class="vendor-location-widget">
-    <h4>Nearby Vendors</h4>
-    <div id="vendorMap"></div>
-</div>
+@if (Model != null)
+{
+    <div class="vendor-location-widget">
+        <div class="vendor-location-info">
+            <h4>@T("Plugins.Demo.BasicPlugin.VendorLocation")</h4>
+            <div class="location-details">
+                <div class="distance-info">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>@Model.Distance km away</span>
+                </div>
+                <div class="address-info">
+                    <i class="fas fa-location-dot"></i>
+                    <span>@Model.Address</span>
+                </div>
+            </div>
+            <div id="vendorMap" data-lat="@Model.Latitude" data-lng="@Model.Longitude" data-name="@Model.Name"></div>
+        </div>
+    </div>
 
-<script>
-    $(document).ready(function() {
-        // Will implement map and vendor loading here
-    });
-</script>
+    <script>
+        $(document).ready(function() {
+            var mapElement = $('#vendorMap');
+            var vendor = {
+                lat: parseFloat(mapElement.data('lat')),
+                lng: parseFloat(mapElement.data('lng')),
+                name: mapElement.data('name')
+            };
 
-<style>
-    .vendor-location-widget {
-        margin: 20px 0;
-        padding: 15px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-    }
+            initVendorMap('vendorMap', [vendor]);
+        });
+    </script>
 
-    #vendorMap {
-        height: 300px;
-        margin-top: 10px;
-    }
-</style>
+    <style>
+        .vendor-location-widget {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: #fff;
+        }
+
+        .vendor-location-info h4 {
+            margin: 0 0 15px;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .location-details {
+            margin-bottom: 15px;
+        }
+
+        .distance-info,
+        .address-info {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+            color: #666;
+        }
+
+        .distance-info i,
+        .address-info i {
+            margin-right: 8px;
+            color: #4a90e2;
+        }
+
+        #vendorMap {
+            height: 200px;
+            border-radius: 4px;
+            margin-top: 10px;
+            border: 1px solid #eee;
+        }
+    </style>
+}
