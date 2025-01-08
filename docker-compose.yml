@@ -6,13 +6,37 @@ services:
             - "80:80"
         depends_on:
             - nopcommerce_database
-    nopcommerce_database:
-        image: "mcr.microsoft.com/mssql/server:2019-latest"
-        container_name: nopcommerce_mssql_server
         environment:
-            SA_PASSWORD: "nopCommerce_db_password"
-            ACCEPT_EULA: "Y"
-            MSSQL_PID: "Express"
+            - DataConfig__DataProvider=postgresql
+            - DataConfig__ConnectionString=Server=nopcommerce_database;Database=nopcommerce;Port=5432;User Id=nop;Password=nopCommerce_db_password;
+    
+    nopcommerce_database:
+        image: "pgvector/pgvector:pg16"
+        container_name: nopcommerce_postgres
+        environment:
+            POSTGRES_DB: "nopcommerce"
+            POSTGRES_USER: "nop"
+            POSTGRES_PASSWORD: "nopCommerce_db_password"
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+            - ./init-scripts:/docker-entrypoint-initdb.d
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U nop -d nopcommerce"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+        command: 
+            - "postgres"
+            - "-c"
+            - "shared_buffers=256MB"
+            - "-c"
+            - "work_mem=4MB"
+            - "-c"
+            - "maintenance_work_mem=64MB"
+            - "-c"
+            - "effective_cache_size=512MB"
+            - "-c"
+            - "max_connections=100"
 
 volumes:
-  nopcommerce_data:            
+    postgres_data:
