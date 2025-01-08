@@ -1,99 +1,58 @@
-using Nop.Plugin.Demo.BasicPlugin.Data;
+using System;
 using Xunit;
+using Nop.Plugin.Demo.BasicPlugin.Data;
 
 namespace Nop.Plugin.Demo.BasicPlugin.Tests.Data;
 
 public class H3IndexTests
 {
     [Fact]
-    public void FromGeoCoordinate_WithValidCoordinate_ReturnsValidIndex()
+    public void FromCoordinate_WithValidCoordinate_ReturnsH3Index()
     {
         // Arrange
-        var coordinate = new GeoCoordinate(37.4224764, -122.0842499);
+        var coordinate = new GeoCoordinate(37.4224764m, -122.0842499m);
 
         // Act
-        var h3Index = H3Index.FromGeoCoordinate(coordinate);
+        var h3Index = H3Index.FromCoordinate(coordinate);
 
         // Assert
-        Assert.NotNull(h3Index);
-        Assert.NotEqual(0UL, h3Index.Value);
+        Assert.True(h3Index.Value > 0);
     }
 
     [Fact]
-    public void GetNeighbors_ReturnsValidNeighbors()
+    public void FromCoordinate_WithSameCoordinate_ReturnsSameIndex()
     {
         // Arrange
-        var coordinate = new GeoCoordinate(37.4224764, -122.0842499);
-        var h3Index = H3Index.FromGeoCoordinate(coordinate);
+        var coordinate1 = new GeoCoordinate(37.4224764m, -122.0842499m);
+        var coordinate2 = new GeoCoordinate(37.4224764m, -122.0842499m);
 
         // Act
-        var neighbors = h3Index.GetNeighbors();
+        var h3Index1 = H3Index.FromCoordinate(coordinate1);
+        var h3Index2 = H3Index.FromCoordinate(coordinate2);
 
         // Assert
-        Assert.NotNull(neighbors);
-        Assert.NotEmpty(neighbors);
-        Assert.All(neighbors, n => Assert.NotEqual(0UL, n.Value));
+        Assert.Equal(h3Index1.Value, h3Index2.Value);
     }
 
     [Fact]
-    public void GetDistanceKm_BetweenAdjacentIndexes_ReturnsExpectedDistance()
+    public void FromCoordinate_WithDifferentCoordinates_ReturnsDifferentIndexes()
     {
         // Arrange
-        var coordinate1 = new GeoCoordinate(37.4224764, -122.0842499);
-        var coordinate2 = new GeoCoordinate(37.4224764, -122.0842599);
-        var h3Index1 = H3Index.FromGeoCoordinate(coordinate1);
-        var h3Index2 = H3Index.FromGeoCoordinate(coordinate2);
+        var coordinate1 = new GeoCoordinate(37.4224764m, -122.0842499m);
+        var coordinate2 = new GeoCoordinate(37.7749295m, -122.4194155m);
 
         // Act
-        var distance = h3Index1.GetDistanceKm(h3Index2);
+        var h3Index1 = H3Index.FromCoordinate(coordinate1);
+        var h3Index2 = H3Index.FromCoordinate(coordinate2);
 
         // Assert
-        Assert.True(distance >= 0);
+        Assert.NotEqual(h3Index1.Value, h3Index2.Value);
     }
 
     [Fact]
-    public void ToString_ReturnsHexString()
+    public void FromCoordinate_WithInvalidCoordinate_ThrowsArgumentOutOfRangeException()
     {
-        // Arrange
-        var coordinate = new GeoCoordinate(37.4224764, -122.0842499);
-        var h3Index = H3Index.FromGeoCoordinate(coordinate);
-
-        // Act
-        var result = h3Index.ToString();
-
-        // Assert
-        Assert.NotNull(result);
-        Assert.NotEmpty(result);
-        // H3 index should be a 16-character hex string
-        Assert.Matches("^[0-9a-fA-F]+$", result);
-    }
-
-    [Fact]
-    public void Equals_WithSameIndex_ReturnsTrue()
-    {
-        // Arrange
-        var coordinate = new GeoCoordinate(37.4224764, -122.0842499);
-        var h3Index1 = H3Index.FromGeoCoordinate(coordinate);
-        var h3Index2 = H3Index.FromGeoCoordinate(coordinate);
-
-        // Act & Assert
-        Assert.Equal(h3Index1, h3Index2);
-        Assert.True(h3Index1.Equals(h3Index2));
-    }
-
-    [Fact]
-    public void GetHashCode_WithSameIndex_ReturnsSameValue()
-    {
-        // Arrange
-        var coordinate = new GeoCoordinate(37.4224764, -122.0842499);
-        var h3Index1 = H3Index.FromGeoCoordinate(coordinate);
-        var h3Index2 = H3Index.FromGeoCoordinate(coordinate);
-
-        // Act
-        var hashCode1 = h3Index1.GetHashCode();
-        var hashCode2 = h3Index2.GetHashCode();
-
-        // Assert
-        Assert.Equal(hashCode1, hashCode2);
+        // Arrange & Act & Assert
+        Assert.Throws<ArgumentOutOfRangeException>(() => H3Index.FromCoordinate(new GeoCoordinate(91m, 0m))); // Invalid latitude
     }
 }

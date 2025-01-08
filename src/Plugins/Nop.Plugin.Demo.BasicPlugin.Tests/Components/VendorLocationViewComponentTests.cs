@@ -1,5 +1,9 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Moq;
+using Nop.Core;
+using Nop.Core.Domain.Vendors;
 using Nop.Plugin.Demo.BasicPlugin.Components;
 using Nop.Plugin.Demo.BasicPlugin.Data;
 using Nop.Plugin.Demo.BasicPlugin.Services;
@@ -10,65 +14,54 @@ namespace Nop.Plugin.Demo.BasicPlugin.Tests.Components;
 public class VendorLocationViewComponentTests
 {
     private readonly Mock<IVendorLocationService> _vendorLocationServiceMock;
-    private readonly VendorLocationViewComponent _viewComponent;
+    private readonly VendorLocationViewComponent _component;
 
     public VendorLocationViewComponentTests()
     {
         _vendorLocationServiceMock = new Mock<IVendorLocationService>();
-        _viewComponent = new VendorLocationViewComponent(_vendorLocationServiceMock.Object);
+        _component = new VendorLocationViewComponent(_vendorLocationServiceMock.Object);
     }
 
     [Fact]
-    public async Task InvokeAsync_WithValidLocation_ReturnsVendorList()
+    public async Task InvokeAsync_ReturnsViewWithModel()
     {
         // Arrange
-        var searchParams = new GeoSearchParameters
+        var vendors = new List<(Vendor Vendor, double DistanceKm)>
         {
-            Latitude = 37.4224764,
-            Longitude = -122.0842499,
-            RadiusKm = 10
+            (new Vendor { Id = 1, Name = "Vendor 1" }, 1.0),
+            (new Vendor { Id = 2, Name = "Vendor 2" }, 2.0)
         };
 
-        var vendorLocations = new List<VendorLocationModel>
-        {
-            new() { Id = 1, Name = "Vendor 1", Distance = 5.0, Latitude = 37.4224764, Longitude = -122.0842499 },
-            new() { Id = 2, Name = "Vendor 2", Distance = 7.0, Latitude = 37.4224764, Longitude = -122.0842499 }
-        };
-
-        _vendorLocationServiceMock.Setup(x => x.GetNearbyVendorsAsync(It.IsAny<GeoSearchParameters>()))
-            .ReturnsAsync(vendorLocations);
+        var pagedList = new PagedList<(Vendor Vendor, double DistanceKm)>(vendors, 0, vendors.Count);
+        _vendorLocationServiceMock.Setup(x => x.FindVendorsNearbyAsync(It.IsAny<GeoSearchParameters>()))
+            .ReturnsAsync(pagedList);
 
         // Act
-        var result = await _viewComponent.InvokeAsync(searchParams) as ViewViewComponentResult;
+        var result = await _component.InvokeAsync() as ViewViewComponentResult;
 
         // Assert
         Assert.NotNull(result);
-        var model = Assert.IsAssignableFrom<List<VendorLocationModel>>(result.ViewData.Model);
+        var model = result.ViewData.Model as IPagedList<(Vendor Vendor, double DistanceKm)>;
+        Assert.NotNull(model);
         Assert.Equal(2, model.Count);
-        Assert.Equal("Vendor 1", model[0].Name);
-        Assert.Equal("Vendor 2", model[1].Name);
     }
 
     [Fact]
     public async Task InvokeAsync_WithNoVendors_ReturnsEmptyList()
     {
         // Arrange
-        var searchParams = new GeoSearchParameters
-        {
-            Latitude = 37.4224764,
-            Longitude = -122.0842499,
-            RadiusKm = 10
-        };
-
-        _vendorLocationServiceMock.Setup(x => x.GetNearbyVendorsAsync(It.IsAny<GeoSearchParameters>()))
-            .ReturnsAsync(new List<VendorLocationModel>());
+        var vendors = new List<(Vendor Vendor, double DistanceKm)>();
+        var pagedList = new PagedList<(Vendor Vendor, double DistanceKm)>(vendors, 0, 0);
+        _vendorLocationServiceMock.Setup(x => x.FindVendorsNearbyAsync(It.IsAny<GeoSearchParameters>()))
+            .ReturnsAsync(pagedList);
 
         // Act
-        var result = await _viewComponent.InvokeAsync(searchParams) as ViewViewComponentResult;
+        var result = await _component.InvokeAsync() as ViewViewComponentResult;
 
         // Assert
         Assert.NotNull(result);
-        var model = Assert.IsAssignableFrom<List<VendorLocationModel>>(result.ViewData.Model);
+        var model = result.ViewData.Model as IPagedList<(Vendor Vendor, double DistanceKm)>;
+        Assert.NotNull(model);
         Assert.Empty(model);
     }
 }

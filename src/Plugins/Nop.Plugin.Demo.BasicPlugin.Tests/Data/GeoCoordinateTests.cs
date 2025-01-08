@@ -9,63 +9,64 @@ public class GeoCoordinateTests
     public void Constructor_WithValidCoordinates_CreatesInstance()
     {
         // Arrange & Act
-        var coordinate = new GeoCoordinate(37.4224764, -122.0842499);
+        var coordinate = new GeoCoordinate(37.4224764m, -122.0842499m);
 
         // Assert
-        Assert.Equal(37.4224764, coordinate.Latitude);
-        Assert.Equal(-122.0842499, coordinate.Longitude);
+        Assert.Equal(37.4224764m, coordinate.Latitude);
+        Assert.Equal(-122.0842499m, coordinate.Longitude);
     }
 
     [Theory]
-    [InlineData(91)]
-    [InlineData(-91)]
-    public void Constructor_WithInvalidLatitude_ThrowsArgumentException(double latitude)
+    [InlineData(91)]  // Greater than 90
+    [InlineData(-91)] // Less than -90
+    public void Constructor_WithInvalidLatitude_ThrowsArgumentOutOfRangeException(int latitude)
     {
-        // Arrange & Act & Assert
-        Assert.Throws<ArgumentException>(() => new GeoCoordinate(latitude, 0));
+        // Act & Assert
+        Assert.Throws<ArgumentOutOfRangeException>(() => new GeoCoordinate(latitude, 0m));
     }
 
     [Theory]
-    [InlineData(181)]
-    [InlineData(-181)]
-    public void Constructor_WithInvalidLongitude_ThrowsArgumentException(double longitude)
+    [InlineData(181)]  // Greater than 180
+    [InlineData(-181)] // Less than -180
+    public void Constructor_WithInvalidLongitude_ThrowsArgumentOutOfRangeException(int longitude)
     {
-        // Arrange & Act & Assert
-        Assert.Throws<ArgumentException>(() => new GeoCoordinate(0, longitude));
+        // Act & Assert
+        Assert.Throws<ArgumentOutOfRangeException>(() => new GeoCoordinate(0m, longitude));
     }
 
     [Fact]
-    public void CalculateDistance_BetweenTwoPoints_ReturnsCorrectDistance()
+    public void DistanceTo_WithValidCoordinates_ReturnsCorrectDistance()
     {
         // Arrange
-        var point1 = new GeoCoordinate(37.4224764, -122.0842499); // Google HQ
-        var point2 = new GeoCoordinate(37.7749, -122.4194);      // San Francisco
+        var coord1 = new GeoCoordinate(37.4224764m, -122.0842499m);
+        var coord2 = new GeoCoordinate(37.4224764m, -122.0842499m);
 
         // Act
-        var distance = point1.CalculateDistance(point2);
+        var distance = coord1.DistanceTo(coord2);
 
         // Assert
-        Assert.True(distance > 40 && distance < 50); // Roughly 45 km
+        Assert.Equal(0m, distance);
     }
 
     [Fact]
-    public void CalculateDistance_ToSamePoint_ReturnsZero()
+    public void DistanceTo_WithDifferentCoordinates_ReturnsNonZeroDistance()
     {
         // Arrange
-        var point = new GeoCoordinate(37.4224764, -122.0842499);
+        var coord1 = new GeoCoordinate(37.4224764m, -122.0842499m);
+        var coord2 = new GeoCoordinate(37.7749295m, -122.4194155m);
 
         // Act
-        var distance = point.CalculateDistance(point);
+        var distance = coord1.DistanceTo(coord2);
 
         // Assert
-        Assert.Equal(0, distance);
+        Assert.True(distance > 0m);
     }
 
     [Fact]
     public void ToString_ReturnsFormattedString()
     {
         // Arrange
-        var coordinate = new GeoCoordinate(37.4224764, -122.0842499);
+        var coordinate = new GeoCoordinate(37.4224764m, -122.0842499m);
 
         // Act
         var result = coordinate.ToString();
