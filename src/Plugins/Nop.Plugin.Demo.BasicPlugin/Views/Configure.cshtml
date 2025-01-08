@@ -3,6 +3,18 @@
     Layout = "_ConfigurePlugin";
 }
 
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Plugins.Demo.BasicPlugin.Configuration")
+    </h1>
+    <div class="float-right">
+        <a href="/vendor-location/license" class="btn btn-info" target="_blank">
+            <i class="fas fa-file-contract"></i>
+            View License
+        </a>
+    </div>
+</div>
+
 @await Component.InvokeAsync("StoreScopeConfiguration")
 
 <form asp-controller="DemoBasicPlugin" asp-action="Configure" method="post">
