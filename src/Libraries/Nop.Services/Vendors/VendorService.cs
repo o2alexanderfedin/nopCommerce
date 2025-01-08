@@ -1,8 +1,10 @@
-﻿using Nop.Core;
+using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Vendors;
 using Nop.Data;
+using Nop.Services.Common;
 using Nop.Services.Html;
 
 namespace Nop.Services.Vendors;
@@ -19,6 +21,7 @@ public partial class VendorService : IVendorService
     protected readonly IRepository<Product> _productRepository;
     protected readonly IRepository<Vendor> _vendorRepository;
     protected readonly IRepository<VendorNote> _vendorNoteRepository;
+    protected readonly IAddressService _addressService;
 
     #endregion
 
@@ -28,13 +31,15 @@ public partial class VendorService : IVendorService
         IRepository<Customer> customerRepository,
         IRepository<Product> productRepository,
         IRepository<Vendor> vendorRepository,
-        IRepository<VendorNote> vendorNoteRepository)
+        IRepository<VendorNote> vendorNoteRepository,
+        IAddressService addressService)
     {
         _htmlFormatter = htmlFormatter;
         _customerRepository = customerRepository;
         _productRepository = productRepository;
         _vendorRepository = vendorRepository;
         _vendorNoteRepository = vendorNoteRepository;
+        _addressService = addressService;
     }
 
     #endregion
@@ -242,6 +247,23 @@ public partial class VendorService : IVendorService
         text = _htmlFormatter.FormatText(text, false, true, false, false, false, false);
 
         return text;
+    }
+
+    /// <summary>
+    /// Gets a vendor's address
+    /// </summary>
+    /// <param name="vendor">Vendor</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the vendor's address
+    /// </returns>
+    public virtual async Task<Address> GetVendorAddressAsync(Vendor vendor)
+    {
+        if (vendor == null)
+            throw new ArgumentNullException(nameof(vendor));
+
+        var address = await _addressService.GetAddressByIdAsync(vendor.AddressId);
+        return address;
     }
 
     #endregion

@@ -1,0 +1,11 @@
+{
+  "Group": "Misc",
+  "FriendlyName": "Vendor Location Manager",
+  "SystemName": "Demo.BasicPlugin",
+  "Version": "1.0",
+  "SupportedVersions": [ "4.60" ],
+  "Author": "nopCommerce team",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Demo.BasicPlugin.dll",
+  "Description": "A geolocation-based vendor discovery solution that enhances the marketplace experience by connecting customers with nearby vendors. Features include automatic geocoding, spatial search, multi-store support, and interactive maps."
+}

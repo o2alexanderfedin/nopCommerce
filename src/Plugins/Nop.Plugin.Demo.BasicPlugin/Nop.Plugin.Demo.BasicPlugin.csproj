@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Copyright>O2.services, Inc.</Copyright>
+    <Company>O2.services, Inc.</Company>
+    <Authors>O2.services, Inc.</Authors>
+    <PackageLicenseUrl>https://github.com/nopSolutions/nopCommerce/blob/master/LICENSE.md</PackageLicenseUrl>
+    <PackageProjectUrl>https://www.nopcommerce.com/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/nopSolutions/nopCommerce</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <OutputPath>..\..\Presentation\Nop.Web\Plugins\Demo.BasicPlugin</OutputPath>
+    <OutDir>$(OutputPath)</OutDir>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="H3" Version="3.2.1-rc1" />
+    <PackageReference Include="H3Lib" Version="3.7.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\Nop.Core\Nop.Core.csproj" />
+    <ProjectReference Include="..\..\Libraries\Nop.Services\Nop.Services.csproj" />
+    <ProjectReference Include="..\..\Presentation\Nop.Web.Framework\Nop.Web.Framework.csproj" />
+    <ClearPluginAssemblies Include="$(MSBuildProjectDirectory)\..\..\Build\ClearPluginAssemblies.proj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="logo.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="plugin.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\Configure.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\**\*.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <!-- This target execute after "Build" target -->
+  <Target Name="NopTarget" AfterTargets="Build">
+    <MSBuild Projects="@(ClearPluginAssemblies)" Properties="PluginPath=$(MSBuildProjectDirectory)\$(OutDir)" Targets="NopClear" />
+  </Target>
+</Project>

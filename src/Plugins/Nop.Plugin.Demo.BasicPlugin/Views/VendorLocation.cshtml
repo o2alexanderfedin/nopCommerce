@@ -1,0 +1,151 @@
+@model IList<VendorLocationModel>
+@{
+    Layout = "_ColumnsTwo";
+    
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/Demo.BasicPlugin/js/vendor-location.js", excludeFromBundle: false);
+    
+    var googleMapsApiKey = await EngineContext.Current.Resolve<ISettingService>()
+        .GetSettingByKeyAsync<string>("DemoBasicPlugin.GoogleMapsApiKey");
+}
+
+<script>
+    window.googleMapsApiKey = '@Html.Raw(googleMapsApiKey)';
+</script>
+
+<div class="page vendor-location-page">
+    <div class="page-title">
+        <h1>@T("Plugins.Demo.BasicPlugin.VendorLocation")</h1>
+    </div>
+    <div class="page-body">
+        <div class="vendor-location-container">
+            <div class="vendor-list">
+                @if (Model.Any())
+                {
+                    foreach (var vendor in Model)
+                    {
+                        <div class="vendor-item" data-lat="@vendor.Latitude" data-lng="@vendor.Longitude">
+                            <h4>@vendor.Name</h4>
+                            <p class="distance">@vendor.Distance km away</p>
+                            <p class="address">@vendor.Address</p>
+                            <a href="@Url.RouteUrl("Vendor", new { SeName = vendor.SeName })" class="btn btn-primary">View Vendor</a>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="no-data">
+                        @T("Plugins.Demo.BasicPlugin.NoVendorsNearby")
+                    </div>
+                }
+            </div>
+            <div id="vendor-map"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        var vendors = [];
+        $('.vendor-item').each(function() {
+            var $item = $(this);
+            vendors.push({
+                lat: parseFloat($item.data('lat')),
+                lng: parseFloat($item.data('lng')),
+                name: $item.find('h4').text(),
+                distance: $item.find('.distance').text(),
+                address: $item.find('.address').text()
+            });
+        });
+
+        VendorLocation.initVendorMap('vendor-map', vendors);
+    });
+</script>
+
+<style>
+    .vendor-location-container {
+        display: flex;
+        gap: 20px;
+        margin: 20px 0;
+    }
+
+    .vendor-list {
+        flex: 1;
+        max-width: 400px;
+        overflow-y: auto;
+        max-height: 600px;
+    }
+
+    .vendor-item {
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin-bottom: 10px;
+        background: #fff;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .vendor-item:hover {
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .vendor-item h4 {
+        margin: 0 0 10px;
+        color: #333;
+    }
+
+    .vendor-item .distance {
+        color: #666;
+        font-size: 0.9em;
+        margin: 5px 0;
+    }
+
+    .vendor-item .address {
+        color: #888;
+        font-size: 0.9em;
+        margin: 5px 0 10px;
+    }
+
+    #vendor-map {
+        flex: 2;
+        height: 600px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+    }
+
+    .no-data {
+        text-align: center;
+        padding: 20px;
+        color: #666;
+    }
+
+    .vendor-info-window {
+        padding: 5px;
+        max-width: 200px;
+    }
+
+    .vendor-info-window h5 {
+        margin: 0 0 5px;
+        color: #333;
+    }
+
+    .vendor-info-window p {
+        margin: 3px 0;
+        font-size: 0.9em;
+    }
+
+    @media (max-width: 768px) {
+        .vendor-location-container {
+            flex-direction: column;
+        }
+
+        .vendor-list {
+            max-width: 100%;
+            max-height: 300px;
+        }
+
+        #vendor-map {
+            height: 400px;
+        }
+    }
+</style>
