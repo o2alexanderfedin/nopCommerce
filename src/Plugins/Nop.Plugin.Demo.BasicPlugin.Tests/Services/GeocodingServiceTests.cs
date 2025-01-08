@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Moq;
@@ -109,5 +111,24 @@ public class GeocodingServiceTests
         Assert.NotNull(result);
         Assert.True(result.Value.Latitude > 0);
         Assert.True(result.Value.Longitude < 0);
+    }
+
+    [Fact]
+    public void GeocodingResult_Deserialization_WorksCorrectly()
+    {
+        // Arrange
+        var json = @"[{""place_id"":298531695,""licence"":""Data OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright"",""osm_type"":""way"",""osm_id"":23733659,""lat"":""37.42248575"",""lon"":""-122.08558456613565"",""class"":""building"",""type"":""commercial"",""place_rank"":30,""importance"":6.277943083843774e-05,""addresstype"":""building"",""name"":""Google Building 41"",""display_name"":""Google Building 41, 1600, Amphitheatre Parkway, Mountain View, Santa Clara County, California, 94043, United States"",""boundingbox"":[""37.4221124"",""37.4228508"",""-122.0859868"",""-122.0851511""]}]";
+
+        // Act
+        var results = JsonSerializer.Deserialize<GeocodingService.GeocodingResult[]>(json, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = false
+        });
+
+        // Assert
+        Assert.NotNull(results);
+        Assert.Single(results);
+        Assert.Equal("37.42248575", results[0].Lat);
+        Assert.Equal("-122.08558456613565", results[0].Lon);
     }
 }

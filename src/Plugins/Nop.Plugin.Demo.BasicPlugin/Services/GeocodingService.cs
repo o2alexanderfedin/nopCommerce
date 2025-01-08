@@ -1,6 +1,7 @@
 using System;
 using System.Net.Http;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Nop.Core.Domain.Common;
@@ -127,9 +128,12 @@ public class GeocodingService : IGeocodingService
         };
     }
 
-    private class GeocodingResult
+    internal class GeocodingResult
     {
+        [JsonPropertyName("lat")]
         public string Lat { get; set; } = string.Empty;
+
+        [JsonPropertyName("lon")]
         public string Lon { get; set; } = string.Empty;
     }
 }
