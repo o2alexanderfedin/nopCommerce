@@ -1,7 +1,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Nop.Core.Infrastructure;
+using Nop.Core;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.Demo.BasicPlugin.Controllers
